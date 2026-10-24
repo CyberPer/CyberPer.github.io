@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atomvoice sign-in</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #e8eaed; background: #111418; }
+  code { display: block; padding: .75rem; background: #1c2128; border-radius: 6px; word-break: break-all; user-select: all; }
+</style>
+</head>
+<body>
+<h1>Atomvoice sign-in</h1>
+<p id="status">Reading the response from Tesla…</p>
+<code id="code" hidden></code>
+<script>
+  // The code is only shown on this page (it never leaves the browser); copy it into Atomvoice.
+  const params = new URLSearchParams(location.search);
+  const status = document.getElementById("status");
+  const code = params.get("code");
+  if (code) {
+    status.textContent = "Signed in. Copy this code into Atomvoice (it expires in a few minutes):";
+    const el = document.getElementById("code");
+    el.textContent = code;
+    el.hidden = false;
+  } else {
+    status.textContent = "No code received: " + (params.get("error_description") || params.get("error") || "open this page from the Tesla sign-in.");
+  }
+</script>
+</body>
+</html>
