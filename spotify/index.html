@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atomvoice: Spotify</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #e8eaed; background: #111418; }
+  a.button { display: block; margin: 1.5rem 0; padding: 1rem; text-align: center; font-size: 1.2rem; color: #111418;
+             background: #7cc4ff; border-radius: 8px; text-decoration: none; }
+</style>
+</head>
+<body>
+<h1>Atomvoice: Spotify</h1>
+<p id="status">Reading the response from Spotify…</p>
+<a id="open" class="button" hidden>Open Atomvoice</a>
+<script>
+  // Spotify's sign-in comes back here with a one-time code. The code only works together with a secret
+  // that stays in the Atomvoice app (PKCE), so it's handed straight to the app and never shown or stored.
+  const params = new URLSearchParams(location.search);
+  const status = document.getElementById("status");
+  const code = params.get("code");
+  if (code) {
+    const query = "code=" + encodeURIComponent(code) + "&state=" + encodeURIComponent(params.get("state") || "");
+    // Android: the Atomvoice app registers atomvoice://spotify.
+    const open = document.getElementById("open");
+    open.href = "intent://spotify?" + query + "#Intent;scheme=atomvoice;package=se.atomvoice.poc;end";
+    if (/Android/i.test(navigator.userAgent)) {
+      status.textContent = "Connected to Spotify. Tap Open Atomvoice to finish.";
+      open.hidden = false;
+    } else {
+      status.textContent = "Connected to Spotify. Finish on the phone: open this sign-in from the Atomvoice app.";
+    }
+  } else {
+    status.textContent = "Not connected: " + (params.get("error_description") || params.get("error") || "open this page from the Spotify sign-in in Atomvoice.");
+  }
+</script>
+</body>
+</html>
